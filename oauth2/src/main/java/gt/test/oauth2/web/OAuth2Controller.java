@@ -27,7 +27,7 @@ public class OAuth2Controller {
 
     @GetMapping(value = "/callback")
     public void callback(@RequestParam String code) {
-        log.info("Request param cde = " + code);
+        log.info("Request param code = " + code);
 
         String credentials = "clientId:clientSecret";
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
