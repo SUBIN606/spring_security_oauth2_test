@@ -1,0 +1,12 @@
+server:
+  port: 8081
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/mydb?serverTimezone-UTC&chracterEncoding=UTF-8
+      username: root
+      password: mysql606
