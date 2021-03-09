@@ -14,7 +14,7 @@ public class Oauth2Application {
 		SpringApplication.run(Oauth2Application.class, args);
 
 //		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//		System.out.println("endcode = " + passwordEncoder.encode("clientSecret"));
+//		System.out.println("endcode = " + passwordEncoder.encode("123"));
 	}
 
 }
