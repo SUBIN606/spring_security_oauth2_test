@@ -42,9 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if(!passwordEncoder.matches(password, findUser.getPassword()))
             throw new BadCredentialsException("비밀번호가 일치하지 않음");
 
-       List<GrantedAuthority> authorityList = new ArrayList<>();
-        authorityList.add(new SimpleGrantedAuthority(findUser.getAuthorities()));
-        return new UsernamePasswordAuthenticationToken(username, password, authorityList);
+        return new UsernamePasswordAuthenticationToken(username, password, findUser.getAuthorities());
     }
 
     @Override
