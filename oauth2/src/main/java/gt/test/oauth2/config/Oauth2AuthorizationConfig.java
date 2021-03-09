@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
 
@@ -25,7 +26,7 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     /* OAuth2 서버가 작동하기 위한 EndPoint에 대한 정보 설정 */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager);
+        endpoints.tokenStore(new JdbcTokenStore(dataSource));
     }
 
     /* 클라이언트 대한 정보를 설정하는 부분 */

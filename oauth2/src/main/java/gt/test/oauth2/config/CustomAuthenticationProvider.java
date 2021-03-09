@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         User findUser = userService.findByPk(username);
 
-        if(!passwordEncoder.matches(password, findUser.getPassword())) {
+        if(findUser == null)
+            throw new UsernameNotFoundException("존재하지 않는 유저");
+
+        if(!passwordEncoder.matches(password, findUser.getPassword()))
             throw new BadCredentialsException("비밀번호가 일치하지 않음");
-        }
 
        List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(findUser.getAuthorities()));
