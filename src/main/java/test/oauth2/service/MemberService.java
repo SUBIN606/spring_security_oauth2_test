@@ -8,13 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import test.oauth2.dto.MemberDto;
 import test.oauth2.entity.Member;
 import test.oauth2.repository.MemberRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
