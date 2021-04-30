@@ -1,3 +1,9 @@
+buildscript {
+	ext {
+		querydslVersion = "4.3.1"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.4.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -13,15 +19,11 @@ repositories {
 }
 
 dependencies {
-	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
 	// security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
 	// OAuth2
-	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.0.RELEASE'
-
+	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.5.RELEASE'
 	// JWT
 	implementation group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.1.1.RELEASE'
 
@@ -30,11 +32,34 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// MySQL
-	//runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'mysql:mysql-connector-java'
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// querydsl
+	compile("com.querydsl:querydsl-core") // querydsl
+	compile("com.querydsl:querydsl-jpa") // querydsl
+	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jpa" // querydsl JPAAnnotationProcessor 사용 지정
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
 	useJUnitPlatform()
+}
+
+// querydsl-jpa 적용
+def generatedJpa='src/main/generated'
+sourceSets {
+	main.java.srcDirs += [ generatedJpa ]
+}
+
+tasks.withType(JavaCompile) {
+	options.annotationProcessorGeneratedSourcesDirectory = file(generatedJpa)
+}
+
+clean.doLast {
+	file(generatedJpa).deleteDir()
 }
