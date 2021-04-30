@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -20,26 +20,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-//    @Bean
-//    public PasswordEncoder noOpPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // 비밀번호 앞에 중괄호({})안에 지정된 값으로 암복호화
+    }
+
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .withUser("victor")
+//                .password("{noop}123")
+//                .roles("USER");
 //    }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("victor")
-                .password("{noop}123")
-                .roles("USER");
-    }
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .csrf().disable()
-                .anonymous().disable()
-                .authorizeRequests().anyRequest().authenticated();
-
+            .cors()
+            .and()
+            .csrf().disable()
+            .anonymous().disable()
+            .authorizeRequests().anyRequest().authenticated();
     }
 }
