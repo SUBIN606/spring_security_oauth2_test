@@ -23,6 +23,9 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member findMember = repository.findById(username).orElse(null);
+        if(findMember == null) {
+            throw new UsernameNotFoundException("Not found User: " + username);
+        }
         return new User(findMember.getBizid(), findMember.getApi_pwd(), getAuthorities(findMember));
     }
 

@@ -20,12 +20,12 @@ public class AES256 {
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";         // Block Cipher 모드 설정
 
     /* 암호화 */
-    public static String encrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException,
+    public static String encrypt(String str, String key) throws NoSuchPaddingException, NoSuchAlgorithmException,
                                                     InvalidAlgorithmParameterException, InvalidKeyException,
                                                     IllegalBlockSizeException, BadPaddingException {
 
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
         IvParameterSpec ivParameterSpec = new IvParameterSpec(IV.getBytes(StandardCharsets.UTF_8));
 
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
@@ -35,13 +35,13 @@ public class AES256 {
     }
 
     /* 복호화 */
-    public static String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException,
+    public static String decrypt(String str, String key, String iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
                                                     InvalidAlgorithmParameterException, InvalidKeyException,
                                                     IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(IV.getBytes(StandardCharsets.UTF_8));
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
 
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
         byte[] decoded = Base64.getDecoder().decode(str);

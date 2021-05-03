@@ -8,3 +8,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+jwt-encrypt-key: fUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v
+jwt-encrypt-iv: ShVmYq3t6w9y$B&E
