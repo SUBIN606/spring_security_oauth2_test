@@ -1,6 +1,7 @@
 package test.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import test.oauth2.service.MemberService;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Configuration
@@ -26,8 +28,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final PasswordEncoder passwordEncoder;
     private final MemberService memberService;
     private final ClientDetailsService clientDetailsService;
-   // private final CustomJwtTokenStore customJwtTokenStore;
-    //private final CustomJwtTokenConverter customJwtTokenConverter;
+    private final JwtProperties jwtProperties;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -37,7 +38,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(jwtAccessTokenConverter());
     }
 
-
     @Bean
     public TokenStore tokenStore() {
         return new CustomJwtTokenStore(jwtAccessTokenConverter());
@@ -45,7 +45,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     JwtAccessTokenConverter jwtAccessTokenConverter() {
-        return new CustomJwtTokenConverter(clientDetailsService);
+        CustomJwtTokenConverter customJwtTokenConverter = new CustomJwtTokenConverter(jwtProperties, clientDetailsService);
+        customJwtTokenConverter.setSigningKey(jwtProperties.getJWT_SIGNING_KEY());
+        return customJwtTokenConverter;
     }
 
     /* client 정보를 Database 에서 가져오는 설정 */
