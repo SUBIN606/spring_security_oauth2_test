@@ -17,11 +17,13 @@ public class CustomJwtTokenStore extends JwtTokenStore {
     private CustomJwtTokenConverter customJwtTokenConverter;
     private CustomBearerTokenExtractor customBearerTokenExtractor;
 
+    /* 생성자 의존관계 주입 */
     public CustomJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer) {
         super(jwtTokenEnhancer);
         this.customJwtTokenConverter = (CustomJwtTokenConverter) jwtTokenEnhancer;
     }
 
+    /* setter 의존관계 주입 */
     public void setTokenExtractor(CustomBearerTokenExtractor extractor){ this.customBearerTokenExtractor = extractor; }
 
     @Override
@@ -41,26 +43,31 @@ public class CustomJwtTokenStore extends JwtTokenStore {
     private OAuth2AccessToken convertAccessToken(String tokenValue) {
 
         Map<String, Object> tokenValueMap = customJwtTokenConverter.decode(tokenValue);
-        String ipAddress;
-
-        ipAddress = tokenValueMap.get(Constants.CLIENT_IP_ADDRESS).toString();
+        String ipAddress = tokenValueMap.get(Constants.CLIENT_IP_ADDRESS).toString();
         log.info("ip address in the token: " + ipAddress);
 
-        log.info("remote addr: " + (customBearerTokenExtractor.request == null ?
-                                        null : customBearerTokenExtractor.request.getRemoteAddr()));
-        log.info("local addr: " + (customBearerTokenExtractor.request == null ?
-                                        null : customBearerTokenExtractor.request.getLocalAddr()));
-
-        if(checkIpAddress(ipAddress)) {
-            return customJwtTokenConverter.extractAccessToken(tokenValue, tokenValueMap);
+        try {
+            log.info("remote addr: " + customBearerTokenExtractor.request == null ?
+                    null : customBearerTokenExtractor.request.getRemoteAddr());
+            log.info("local addr: " + customBearerTokenExtractor.request == null ?
+                    null : customBearerTokenExtractor.request.getLocalAddr());
+        } catch (Exception e) {
+            log.error("error = " , e);
         }
 
+        if(checkIpAddress(ipAddress)) { // 요청한 ip 주소와 DB에 등록된 ip 주소가 일치하는지 확인
+            return customJwtTokenConverter.extractAccessToken(tokenValue, tokenValueMap);
+        }
         return null;
     }
 
     private boolean checkIpAddress(String ipAddress) {
-        IpAddressMatcher matcher = new IpAddressMatcher(ipAddress);
-        return matcher.matches(customBearerTokenExtractor.request);
+        try {
+            IpAddressMatcher matcher = new IpAddressMatcher(ipAddress);
+            return matcher.matches(customBearerTokenExtractor.request);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

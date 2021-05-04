@@ -2,7 +2,6 @@ package test.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -18,12 +17,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class CustomJwtTokenConverter extends JwtAccessTokenConverter {
-
-//    @Value("${jwt-encrypt-key}")
-//    private String JWT_ENCRYPT_KEY;
-//
-//    @Value("${jwt-encrypt-iv}")
-//    private String JWT_ENCRYPT_IV;
 
     private final JwtProperties jwtProperties;
     private final ClientDetailsService clientDetailsService;

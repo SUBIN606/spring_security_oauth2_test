@@ -9,6 +9,7 @@ spring:
     hibernate:
       ddl-auto: update
 
+# JWT 토큰 관련 key
 jwt:
   encrypt-key: fUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v
   encrypt-iv: ShVmYq3t6w9y$B&E

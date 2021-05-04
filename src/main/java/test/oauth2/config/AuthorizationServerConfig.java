@@ -1,7 +1,6 @@
 package test.oauth2.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,42 +14,31 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import test.oauth2.service.MemberService;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Configuration
 @EnableAuthorizationServer
-@RequiredArgsConstructor    // private final 정의 필드들을 생성자로 의존성 주입
+@RequiredArgsConstructor    // private final 정의 필드들을 생성자로 의존관계 주입
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final AuthenticationManager authenticationManager;
     private final DataSource dataSource;
+    private final AuthenticationManager authenticationManager;  // grant_type password 필수
     private final PasswordEncoder passwordEncoder;
     private final MemberService memberService;
-    private final ClientDetailsService clientDetailsService;
-    private final JwtProperties jwtProperties;
+    private final TokenStore tokenStore;
+    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+    private final CustomOAuth2RequestFactory customOAuth2RequestFactory;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
-                 .userDetailsService(memberService)
-                .tokenStore(tokenStore())
-                .accessTokenConverter(jwtAccessTokenConverter());
+                .userDetailsService(memberService)
+                .tokenStore(tokenStore)
+                .accessTokenConverter(jwtAccessTokenConverter)
+                .requestFactory(customOAuth2RequestFactory);
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        return new CustomJwtTokenStore(jwtAccessTokenConverter());
-    }
-
-    @Bean
-    JwtAccessTokenConverter jwtAccessTokenConverter() {
-        CustomJwtTokenConverter customJwtTokenConverter = new CustomJwtTokenConverter(jwtProperties, clientDetailsService);
-        customJwtTokenConverter.setSigningKey(jwtProperties.getJWT_SIGNING_KEY());
-        return customJwtTokenConverter;
-    }
-
-    /* client 정보를 Database 에서 가져오는 설정 */
+    /* client 정보를 Database 에서 가져오도록 설정 */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
