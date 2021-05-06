@@ -34,8 +34,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(memberService)
                 .tokenStore(tokenStore)
-                .accessTokenConverter(jwtAccessTokenConverter)
-                .requestFactory(customOAuth2RequestFactory);
+                .accessTokenConverter(jwtAccessTokenConverter);
+                //.requestFactory(customOAuth2RequestFactory);
     }
 
     /* client 정보를 Database 에서 가져오도록 설정 */

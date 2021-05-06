@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /* passwordEncoder Bean 등록*/
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // 비밀번호 앞에 중괄호({})안에 지정된 값으로 암복호화
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // 비밀번호 앞에 중괄호({})안에 지정된 값으로 암호화
     }
 
     /* JWT 토큰형식으로 사용 Bean 등록 */
