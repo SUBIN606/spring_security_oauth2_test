@@ -18,7 +18,7 @@ public class MemberDto {
     private String bizid;
     private String bizpwd;
     private String biz_manager;
-    private String api_pwd;
+  //  private String api_pwd;
 
     /* Entity 반환 */
     public Member toEntity() {
@@ -28,7 +28,7 @@ public class MemberDto {
                 .bizid(bizid)
                 .bizpwd(bizpwd)
                 .biz_manager(biz_manager)
-                .api_pwd(api_pwd)
+//                .api_pwd(api_pwd)
                 .build();
     }
 }

@@ -19,8 +19,6 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
-    public final StringPath api_pwd = createString("api_pwd");
-
     public final StringPath biz_manager = createString("biz_manager");
 
     public final StringPath bizid = createString("bizid");

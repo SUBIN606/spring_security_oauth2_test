@@ -27,15 +27,15 @@ public class Member {
 
     private String bizpwd;
     private String biz_manager;
-    private String api_pwd;
+    //private String api_pwd;
 
     @Builder
-    public Member(String name, String level, String bizid, String bizpwd, String biz_manager, String api_pwd) {
+    public Member(String name, String level, String bizid, String bizpwd, String biz_manager) {
         this.name = name;
         this.level = level;
         this.bizid = bizid;
         this.bizpwd = bizpwd;
         this.biz_manager = biz_manager;
-        this.api_pwd = api_pwd;
+       // this.api_pwd = api_pwd;
     }
 }

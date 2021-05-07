@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import test.oauth2.service.MemberService;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +24,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ClientDetailsService clientDetailsService;
     private final CustomBearerTokenExtractor customBearerTokenExtractor;
     private final JwtProperties jwtProperties;
+    private final MemberService memberService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors()
+                .and()
+                .csrf().disable()
+                .anonymous().disable()
+                .authorizeRequests().anyRequest().authenticated();
+    }
 
     /* AuthenticationManager Bean 등록 */
     @Bean
@@ -51,12 +69,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return customJwtTokenConverter;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-            .and()
-            .csrf().disable()
-            .anonymous().disable()
-            .authorizeRequests().anyRequest().authenticated();
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        CustomAuthenticationProvider customAuthenticationProvider
+                            = new CustomAuthenticationProvider(memberService);
+        return customAuthenticationProvider;
     }
+
 }

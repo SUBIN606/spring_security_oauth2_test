@@ -23,13 +23,15 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member findMember = repository.findById(username).orElse(null);
+
         if(findMember == null) {
             throw new UsernameNotFoundException("Not found User: " + username);
         }
-        return new User(findMember.getBizid(), findMember.getApi_pwd(), getAuthorities(findMember));
+
+        return new User(findMember.getBizid(), findMember.getBizpwd(), getAuthorities(findMember));
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(Member member) {
+    public Collection<? extends GrantedAuthority> getAuthorities(Member member) {
         return Arrays.asList(new SimpleGrantedAuthority(getUserRole(member.getLevel())));
     }
 

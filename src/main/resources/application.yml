@@ -1,13 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/RS?serverTimezone-UTC&chracterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/ATEMPLATE?serverTimezone-UTC&chracterEncoding=UTF-8
     username: root
     password: mysql606
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 # JWT 토큰 관련 key
 jwt:
